@@ -3,7 +3,10 @@ dotenv.config();
 import cors from "cors";
 import express, { Application } from "express";
 import bodyParser from "body-parser";
-import RouteHandler from "routes";
+import RouteHandler from "./routes";
+import errorHandler from "./middlewares/errorHandler.middleware";
+
+const port = process.env.PORT || 8000;
 
 const App: Application = express();
 
@@ -12,6 +15,8 @@ App.use(bodyParser.json());
 
 RouteHandler(App);
 
-App.listen(() => {
-    
-})
+App.use(errorHandler);
+
+App.listen(port, () => {
+  console.log(`The server is running on http://localhost:${port}`);
+});
