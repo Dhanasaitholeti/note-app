@@ -70,10 +70,36 @@ export const updateNote = async (
   next: NextFunction
 ) => {
   const { title, content }: noteType = req.body;
+  const { id } = req.params;
   try {
     const error = validateInputs(title, content);
-
     if (error) throw error;
+
+    const note = await noteModel.findById(id);
+
+    if (!note) {
+      const error: ErrorWithStatusCode = new Error(
+        "Note you are trying to update for doesn't exist"
+      );
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const updatedNote = await noteModel.findByIdAndUpdate(
+      id,
+      {
+        title,
+        content,
+        modifiedAt: Date.now(),
+      },
+      {
+        new: true,
+      }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Note updated sucessfully", notes: updatedNote });
   } catch (error) {
     next(error);
   }
@@ -87,15 +113,17 @@ export const deleteNote = async (
   const { id } = req.params;
   try {
     const note = await noteModel.findById(id);
+
     if (!note) {
       const error: ErrorWithStatusCode = new Error(
-        "Note you are looking for doesn't exist"
+        "Note you are trying to delete for doesn't exist"
       );
       error.statusCode = 404;
       throw error;
     }
+
     await noteModel.findByIdAndDelete(id);
-    res.json;
+    res.status(200).json({ message: "note successfully deleted" });
   } catch (error) {
     next(error);
   }
