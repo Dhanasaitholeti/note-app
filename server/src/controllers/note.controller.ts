@@ -1,31 +1,67 @@
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
+import noteModel from "../models/note.model";
+import { noteType } from "../libs/types/notes.types";
 
 export const getAllNotes = async (
   req: Request,
   res: Response,
-  next: () => void
-) => {};
+  next: NextFunction
+) => {
+  try {
+    const notes = await noteModel.find({});
+    res.status(200).json({ notes });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getNote = async (
   req: Request,
   res: Response,
-  next: () => void
-) => {};
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  try {
+    const note = await noteModel.findById(id);
+    if (!note) throw new Error("Note you are looking for doesn't exist");
+    res.status(200).json({ notes: note });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const createNote = async (
   req: Request,
   res: Response,
-  next: () => void
-) => {};
+  next: NextFunction
+) => {
+  const { title, content }: noteType = req.body;
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const updateNote = async (
   req: Request,
   res: Response,
-  next: () => void
-) => {};
+  next: NextFunction
+) => {
+  const { title, content }: noteType = req.body;
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const deleteNote = async (
   req: Request,
   res: Response,
-  next: () => void
-) => {};
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
