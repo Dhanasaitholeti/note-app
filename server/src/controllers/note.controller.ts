@@ -1,6 +1,7 @@
 import { Response, Request, NextFunction } from "express";
 import noteModel from "../models/note.model";
 import { noteType } from "../libs/types/notes.types";
+import { ErrorWithStatusCode } from "../libs/types/error.types";
 
 export const getAllNotes = async (
   req: Request,
@@ -23,7 +24,13 @@ export const getNote = async (
   const { id } = req.params;
   try {
     const note = await noteModel.findById(id);
-    if (!note) throw new Error("Note you are looking for doesn't exist");
+    if (!note) {
+      const error: ErrorWithStatusCode = new Error(
+        "Note you are looking for doesn't exist"
+      );
+      error.statusCode = 404;
+      throw error;
+    }
     res.status(200).json({ notes: note });
   } catch (error) {
     next(error);
@@ -36,6 +43,7 @@ export const createNote = async (
   next: NextFunction
 ) => {
   const { title, content }: noteType = req.body;
+  
   try {
   } catch (error) {
     next(error);
