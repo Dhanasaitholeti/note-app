@@ -1,7 +1,7 @@
 import { ErrorWithStatusCode } from "../../libs/types/error.types";
 
 const validateInputs = (title: String, content: String) => {
-  if (title.length < 20 || content.length < 40) {
+  if (title.trim().length < 10 || content.trim().length < 20) {
     const error: ErrorWithStatusCode = new Error(
       "Please ensure title and content are required length"
     );
