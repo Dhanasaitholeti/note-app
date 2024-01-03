@@ -29,7 +29,7 @@ export const userSignin = async (
       const error: ErrorWithStatusCode = new Error(
         "Password provided is incorrect"
       );
-      error.statusCode = 403;
+      error.statusCode = 404;
       throw error;
     }
     const token = await tokenGenerator({
